@@ -1,16 +1,15 @@
-
+#include <petscsys.h>
 
 #pragma once
 
 class Params{
 
 public:
-
     // grid:
     int N_x, N_y;
-    double dx, dy;
+    PetscReal dx, dy;
     
     // simulation parameters:
-    double Re, dt;
+    PetscReal Re, dt;
     int nsteps;
 };

@@ -1,3 +1,4 @@
+#include <petscsys.h>
 #pragma once
 
 /* List of all boundary condition types */
@@ -11,10 +12,10 @@ enum boundary_type{
 /* An abstract base class for boundary conditions */
 class BoundaryCondition{
 public:
-    virtual ~BoundaryCondition() = 0;    
+    virtual ~BoundaryCondition() = 0;
 };
 
-/* Boundary condition "container" class for square domain */
+/* Boundary condition "container" class for rectangular domain */
 class Boundaries{
 public:
     BoundaryCondition* left;
@@ -27,18 +28,19 @@ public:
 /* Concrete boundary condition classes */
 class Dirichlet : public BoundaryCondition{
 public:
-    Dirichlet(double& x);
-
+    Dirichlet(PetscReal x, PetscReal y);
+    PetscReal x;
+    PetscReal y;
 private:
-    double& x;
     boundary_type type;
 };
 
+
 class Neumann : public BoundaryCondition{
 public:
-    Neumann(double& x);
-
+    Neumann(PetscReal x, PetscReal y);
+    PetscReal x;
+    PetscReal y;
 private:
-    double& x;
     boundary_type type;
 };

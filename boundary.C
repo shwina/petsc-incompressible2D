@@ -2,10 +2,10 @@
 
 BoundaryCondition::~BoundaryCondition(){}
 
-Dirichlet::Dirichlet(double& _x):x(_x){
+Dirichlet::Dirichlet(double _x, double _y):x(_x), y(_y){
     type = DIRICHLET;
 }
 
-Neumann::Neumann(double& _x):x(_x){
+Neumann::Neumann(double _x, double _y):x(_x), y(_y){
     type = NEUMANN;
 }
