@@ -363,11 +363,11 @@ void Petsc2dNScpu::updateVelocities(){
             else{
 
                 if (j < N_x - 2){
-                    u_l[i][j] -= params.dt*(p_l[i][j] - p_l[i][j-1])/dx;
+                    u_l[i][j] -= params.dt*(p_l[i][j+1] - p_l[i][j])/dx;
                 }
 
                 if (i < N_y - 2){
-                    v_l[i][j] -= params.dt*(p_l[i][j] - p_l[i-1][j])/dy;
+                    v_l[i][j] -= params.dt*(p_l[i+1][j] - p_l[i][j])/dy;
                 } 
             } 
         } 

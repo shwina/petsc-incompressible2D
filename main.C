@@ -16,8 +16,8 @@ int main(){
     params.dx  = 0.01;
     params.dy  = 0.01;
     params.Re  = 2000;
-    params.dt  = 0.00001;
-    params.nsteps = 20;
+    params.dt  = 0.0001;
+    params.nsteps = 2000;
 
 /*
     boundaries.left  = new Dirichlet(0, 0);
