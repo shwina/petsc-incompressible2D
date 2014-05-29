@@ -25,26 +25,10 @@ public:
     void writeResults();
     ~Petsc2dNScpu();
 
-    // PETSC field vectors:
-    Vec u_local;
-    Vec u_global;
-    Vec v_local;
-    Vec v_global;
-    Vec p_local;
-    Vec p_global;
-
-    // RHS for computing intermediate velocities:
-    Vec rhs1x;
-    Vec rhs1y;
-
-    // Poisson matrix and associated RHS:
-    Mat poissonmatrix;
-    Vec rhs2;
 
 private:
-    
     FRIEND_TEST(Petsc2dNScpuTest, IntermediateVelocityTest);
-
+    FRIEND_TEST(Petsc2dNScpuTest, PoissonConstructionTest);
     void initialiseArrays();
     void makePoissonMatrix();
     void calculateIntermediateVelocities();
@@ -68,4 +52,20 @@ private:
 
     // Null space context:
     MatNullSpace nullspace;
+
+    // PETSC field vectors:
+    Vec u_local;
+    Vec u_global;
+    Vec v_local;
+    Vec v_global;
+    Vec p_local;
+    Vec p_global;
+
+    // RHS for computing intermediate velocities:
+    Vec rhs1x;
+    Vec rhs1y;
+
+    // Poisson matrix and associated RHS:
+    Mat poissonmatrix;
+    Vec rhs2;
 };

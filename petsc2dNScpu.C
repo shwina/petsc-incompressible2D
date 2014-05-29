@@ -4,7 +4,7 @@
 #include <petscsys.h>
 
 
-
+#include <kernels.h>
 /*
     2-D Incompressible Flow solver based
     on the fractional step method on a staggered
@@ -229,32 +229,14 @@ void Petsc2dNScpu::calculateIntermediateVelocities(){
 
                 // account for u-padding:
                 if (j < N_x - 2){
-
-                    // u-velocity update:
-                    rx[i][j] =  ((u_l[i][j] + u_l[i][j-1])*(u_l[i][j] + u_l[i][j-1]) -
-                                 (u_l[i][j+1] + u_l[i][j])*(u_l[i][j+1] + u_l[i][j]))/(4*dx) +
-
-                                ((u_l[i][j] + u_l[i-1][j])*(v_l[i-1][j] + v_l[i-1][j+1]) - 
-                                 (u_l[i+1][j] + u_l[i][j])*(v_l[i][j] + v_l[i][j+1]))/(4*dy) +
-
-                                (1./(params.Re))*
-                                ((u_l[i][j+1] - 2*u_l[i][j] + u_l[i][j-1])/(dx*dx) +
-                                 (u_l[i+1][j] - 2*u_l[i][j] + u_l[i-1][j])/(dy*dy));
+                    convectionKernel_u(u_l, v_l, rx, i, j, dx, dy, params.Re);
                 }
 
                 // account for v-padding:
                 if (i < N_y - 2){
-
+                    convectionKernel_v(u_l, v_l, rx, i, j, dx, dy, params.Re);
                     // v-velocity update:
-                    ry[i][j]  = ((v_l[i][j] + v_l[i-1][j])*(v_l[i][j] + v_l[i-1][j]) - 
-                                 (v_l[i+1][j] + v_l[i][j])*(v_l[i+1][j] + v_l[i][j]))/(4*dy) + 
 
-                                ((v_l[i][j-1] + v_l[i][j])*(u_l[i][j-1] + u_l[i+1][j-1]) -
-                                 (v_l[i][j] + v_l[i][j+1])*(u_l[i][j] + u_l[i+1][j]))/(4*dx) + 
-
-                                (1./(params.Re))*
-                                ((v_l[i][j+1] - 2*v_l[i][j] + v_l[i][j-1])/(dx*dx) + 
-                                 (v_l[i+1][j] - 2*v_l[i][j] + v_l[i-1][j])/(dy*dy));
                 } 
             } 
         } 
@@ -274,8 +256,8 @@ void Petsc2dNScpu::calculateIntermediateVelocities(){
                 // account for u-padding:
                 if (j < N_x - 2){
                     u_l[i][j] += params.dt*rx[i][j];
-                }
-
+                
+}
                 // account for v-padding:
                 if (i < N_y - 2){
                     v_l[i][j] += params.dt*ry[i][j];
@@ -430,7 +412,7 @@ void Petsc2dNScpu::updateGhosts(){
 
         i = (y+n)-2;
         if (i == N_y-2){
-            u_l[i][j] = 0.00002 - u_l[i-1][j];
+            u_l[i][j] = 0.0002 - u_l[i-1][j];
         }
     }
 
