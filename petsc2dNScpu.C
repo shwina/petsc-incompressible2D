@@ -17,7 +17,6 @@ Petsc2dNScpu::Petsc2dNScpu(const Boundaries& _boundaries, const Params& _params)
 
 
 void Petsc2dNScpu::initialise(){
-    PetscInitialize(NULL, NULL, NULL, NULL); 
     initialiseArrays();
     makePoissonMatrix();
 }
@@ -234,8 +233,7 @@ void Petsc2dNScpu::calculateIntermediateVelocities(){
 
                 // account for v-padding:
                 if (i < N_y - 2){
-                    convectionKernel_v(u_l, v_l, rx, i, j, dx, dy, params.Re);
-                    // v-velocity update:
+                    convectionKernel_v(u_l, v_l, ry, i, j, dx, dy, params.Re);
 
                 } 
             } 
@@ -252,13 +250,10 @@ void Petsc2dNScpu::calculateIntermediateVelocities(){
 
 
             else{
-
-                // account for u-padding:
                 if (j < N_x - 2){
                     u_l[i][j] += params.dt*rx[i][j];
                 
-}
-                // account for v-padding:
+                }
                 if (i < N_y - 2){
                     v_l[i][j] += params.dt*ry[i][j];
                 } 
@@ -298,7 +293,8 @@ void Petsc2dNScpu::calculateRHS2(){
             }
 
             else{  
-                r2[i][j] = -((u_l[i][j] - u_l[i][j-1])/dx + (v_l[i][j] - v_l[i-1][j])/dy)/params.dt;
+                divergenceKernel(u_l, v_l, r2, i, j, dx, dy);
+                r2[i][j] = -r2[i][j]/params.dt;
             }
         }
     }
@@ -345,11 +341,11 @@ void Petsc2dNScpu::updateVelocities(){
             else{
 
                 if (j < N_x - 2){
-                    u_l[i][j] -= params.dt*(p_l[i][j+1] - p_l[i][j])/dx;
+                    gradientKernel_u(p_l, u_l, i, j, dx, params.dt);
                 }
 
                 if (i < N_y - 2){
-                    v_l[i][j] -= params.dt*(p_l[i+1][j] - p_l[i][j])/dy;
+                    gradientKernel_v(p_l, v_l, i, j, dy, params.dt);
                 } 
             } 
         } 
@@ -420,7 +416,7 @@ void Petsc2dNScpu::updateGhosts(){
     DMDAVecRestoreArray(da, v_local, &v_l);
 }
 
-Petsc2dNScpu::~Petsc2dNScpu(){
+void Petsc2dNScpu::finalise(){
 
     VecDestroy(&u_local); 
     VecDestroy(&v_local); 
@@ -438,8 +434,6 @@ Petsc2dNScpu::~Petsc2dNScpu(){
 
     KSPDestroy(&ksp);
     MatNullSpaceDestroy(&nullspace);
-
-    PetscFinalize();
 }
 
 

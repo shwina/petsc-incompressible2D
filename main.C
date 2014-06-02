@@ -4,20 +4,22 @@
 
 #include <iostream>
 
-int main(){
+int main(int argc, char** args){
+
+    PetscInitialize(&argc, &args, NULL, NULL);
 
     // define the problem:
 
     Params params;
     Boundaries boundaries;
 
-    params.N_x = 32;
-    params.N_y = 32;
-    params.dx  = 0.01;
-    params.dy  = 0.01;
+    params.N_x = 128;
+    params.N_y = 128;
+    params.dx  = 0.0025;
+    params.dy  = 0.0025;
     params.Re  = 2000;
     params.dt  = 0.0001;
-    params.nsteps = 20000;
+    params.nsteps = 100;
 
 /*
     boundaries.left  = new Dirichlet(0, 0);
@@ -34,4 +36,6 @@ int main(){
     }
 
     solver.writeResults();
+    solver.finalise();
+    PetscFinalize();
 }

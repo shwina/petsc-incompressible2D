@@ -35,3 +35,12 @@ void convectionKernel_v(PetscReal **u_l, PetscReal **v_l, PetscReal **ry,  Petsc
 void divergenceKernel(PetscReal **u_l, PetscReal **v_l, PetscReal **r2, PetscInt i, PetscInt j, PetscReal dx, PetscReal dy) {
     r2[i][j] =  (u_l[i][j] - u_l[i][j-1])/dx + (v_l[i][j] - v_l[i-1][j])/dy;
 }
+
+void gradientKernel_u(PetscReal **p_l, PetscReal **u_l, PetscInt i, PetscInt j, PetscReal dx, PetscReal dt) {
+    u_l[i][j] -= dt*(p_l[i][j+1] - p_l[i][j])/dx;
+}
+
+void gradientKernel_v(PetscReal **p_l, PetscReal **v_l, PetscInt i, PetscInt j, PetscReal dy, PetscReal dt) {
+    v_l[i][j] -= dt*(p_l[i+1][j] - p_l[i][j])/dy;
+}
+

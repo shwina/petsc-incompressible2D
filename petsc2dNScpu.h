@@ -21,10 +21,8 @@ public:
     Petsc2dNScpu(const Boundaries&, const Params&);
     void initialise();
     void takeStep();
-    void finalise();
     void writeResults();
-    ~Petsc2dNScpu();
-
+    void finalise();
 
 private:
     FRIEND_TEST(Petsc2dNScpuTest, IntermediateVelocityTest);
